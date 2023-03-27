@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oaker.hours.mapper.WorkTypeMapper">
+
+    <select id="countByName" resultType="java.lang.Long">
+        select count(1) from mh_work_type where name =#{name} and deleted =0
+    </select>
+
+    <select id="countByNameDifId" resultType="java.lang.Long">
+        select count(1) from mh_work_type where name =#{name} and deleted=0 and id <![CDATA[ <> ]]> #{id}
+    </select>
+
+    <select id="queryAll" resultType="com.oaker.common.core.domain.IdName">
+        select id,name from mh_work_type where deleted = 0
+    </select>
+
+
+</mapper>

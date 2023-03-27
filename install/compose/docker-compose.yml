@@ -1,0 +1,77 @@
+version: "3.1"
+services:
+  cost_db:
+    image: mariadb
+    container_name: cost_db
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - 3306:3306
+    volumes: # 挂载
+      - ./data/mariadb/:/var/lib/mysql
+      - ./logs/mariadb/:/var/log/mysql
+      - ./conf/init.d:/docker-entrypoint-initdb.d
+      - /etc/localtime:/etc/localtime
+    privileged: true 
+    networks:
+      - cost
+
+  cost_redis:
+    image: redis:latest
+    container_name: cost_redis
+    command: redis-server /etc/redis/redis.conf
+    ports:
+      - 6379:6379
+    volumes: # 挂载
+      - ./conf/redis/redis.conf:/etc/redis/redis.conf
+      - /etc/localtime:/etc/localtime
+    restart: always
+    privileged: true 
+    networks:
+      - cost
+
+
+  costapp:
+    image: cc2c/app-env:v1.0
+    container_name: costapp
+    ports:
+      - 8080:8080
+    volumes: # 挂载上传文件
+      - ./data/uploads/:/usr/local/wuyusoft/uploads/
+      - ./logs/server/:/usr/local/wuyusoft/logs/
+      - ./conf/app/:/usr/local/wuyusoft/app/
+      - /etc/localtime:/etc/localtime
+
+    depends_on:
+      - cost_db
+      - cost_redis
+    restart: always
+    privileged: true 
+    command: ["/usr/local/wuyusoft/app/start.sh"]
+    networks:
+      - cost
+
+  cost_nginx:
+    image: nginx:latest
+    container_name: cost_nginx
+    ports:
+      - 80:80  # 暴露端口
+    volumes: # 挂载
+      - ./conf/www:/usr/share/nginx/html
+      - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /etc/localtime:/etc/localtime
+    restart: always
+    privileged: true 
+    depends_on:
+      - costapp
+    networks:
+      - cost
+      
+
+      
+networks:
+  cost:
+    driver: bridge

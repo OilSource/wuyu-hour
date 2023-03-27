@@ -1,0 +1,6 @@
+ALTER TABLE `jx_project_dev`.`sys_project_user` 
+ADD COLUMN `join_with_project` tinyint(255) NULL COMMENT '加入时间同项目开始时间，1:是,0:否' AFTER `update_time`,
+ADD COLUMN `join_time` datetime NULL COMMENT '加入时间' AFTER `join_with_project`;
+
+update sys_project_user set join_with_project =0 ,join_time = create_time;
+
