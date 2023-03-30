@@ -554,6 +554,10 @@ public class ProjectHourServiceImpl extends ServiceImpl<ProjectHourMapper, Proje
             sysPost = postService.getByUserId(mhHourDetail.getUserId());
             userFill.setUserId(mhHourDetail.getUserId())
                     .setUseHour(mhHourDetail.getUseHour())
+                    .setWorkOvertimeHour(mhHourDetail.getWorkOvertimeHour())
+                    .setChangeHour(mhHourDetail.getChangeHour())
+                    .setTimeOffHour(mhHourDetail.getTimeOffHour())
+                    .setLeaveHour(mhHourDetail.getLeaveHour())
                     .setDaily(mhHourDetail.getDaily())
                     .setEveryday(mhHourDetail.getEveryday())
                     .setFillStatus(UserHourFillStatusEnum.FILLED.getStatus())

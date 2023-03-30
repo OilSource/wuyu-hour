@@ -68,18 +68,18 @@ public class MhUserHourController extends BaseController {
     public AjaxResult create(@Valid @RequestBody UserHourSaveDTO userHourSaveDTO) {
 
         List<UserHourSaveDTO.ProjectHour> list = userHourSaveDTO.getProjectHours();
-        if (!CollectionUtils.isEmpty(list)) {
-            for (UserHourSaveDTO.ProjectHour projectHour : list) {
-                if (!CollectionUtils.isEmpty(projectHour.getWorkTypeHourList())) {
-                    //每个项目当日总工时
-                    BigDecimal hour = BigDecimal.ZERO;
-                    for (ProjectSubHour subHour : projectHour.getWorkTypeHourList()) {
-                        hour = hour.add(subHour.getHour());
-                    }
-                    projectHour.setHour(hour);
-                }
-            }
-        }
+//        if (!CollectionUtils.isEmpty(list)) {
+//            for (UserHourSaveDTO.ProjectHour projectHour : list) {
+//                if (!CollectionUtils.isEmpty(projectHour.getWorkTypeHourList())) {
+//                    //每个项目当日总工时
+//                    BigDecimal hour = BigDecimal.ZERO;
+//                    for (ProjectSubHour subHour : projectHour.getWorkTypeHourList()) {
+//                        hour = hour.add(subHour.getHour());
+//                    }
+//                    projectHour.setHour(hour);
+//                }
+//            }
+//        }
 
         boolean result = userHourService.create(userHourSaveDTO);
         if (CostConfig.POST_COST || CostConfig.USER_COST) {

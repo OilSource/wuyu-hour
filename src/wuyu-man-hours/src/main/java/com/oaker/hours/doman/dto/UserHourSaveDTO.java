@@ -40,12 +40,29 @@ public class UserHourSaveDTO {
         @ApiModelProperty(value = "项目id", required = true)
         private Long projectId;
 
-        @ApiModelProperty(value = "填报工时", required = true)
+        @NotNull(message = "填报今日工时不能为空")
+        @ApiModelProperty(value = "填报今日工时", required = true)
         private BigDecimal hour;
 
+        @NotNull(message = "填报加班工时不能为空")
+        @ApiModelProperty(value = "填报加班工时", required = true)
+        private BigDecimal workOvertimeHour;
+
+        @NotNull(message = "填报变更工时不能为空")
+        @ApiModelProperty(value = "填报变更工时", required = true)
+        private BigDecimal changeHour;
+
+        @NotNull(message = "填报调休工时不能为空")
+        @ApiModelProperty(value = "填报调休工时", required = true)
+        private BigDecimal timeOffHour;
+
+        @NotNull(message = "填报请假工时不能为空")
+        @ApiModelProperty(value = "填报请假工时", required = true)
+        private BigDecimal leaveHour;
+
 //        @NotEmpty(message = "工作类型工时列表不能为空")
-        @ApiModelProperty(value = "工作类型工时列表")
-        private List<ProjectSubHour> workTypeHourList;
+//        @ApiModelProperty(value = "工作类型工时列表")
+//        private List<ProjectSubHour> workTypeHourList;
 
         @ApiModelProperty(value = "日报内容")
         private String daily;

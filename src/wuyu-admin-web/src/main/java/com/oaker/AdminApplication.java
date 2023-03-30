@@ -18,7 +18,6 @@ public class AdminApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AdminApplication.class, args);
-        System.out.println("无鱼工时管理系统业务服务，启动成功！！");
         StringBuilder commandLog = new StringBuilder();
         commandLog.append("+==================================================================================+\n");
         commandLog.append("+                       无鱼工时管理系统业务服务，启动成功！！                          +\n");

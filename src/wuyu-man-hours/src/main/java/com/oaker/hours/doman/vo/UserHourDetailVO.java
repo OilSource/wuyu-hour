@@ -47,6 +47,18 @@ public class UserHourDetailVO {
     @ApiModelProperty("工时")
     private BigDecimal useHour;
 
+    @ApiModelProperty(value = "填报加班工时")
+    private BigDecimal workOvertimeHour;
+
+    @ApiModelProperty(value = "填报变更工时")
+    private BigDecimal changeHour;
+
+    @ApiModelProperty(value = "填报调休工时")
+    private BigDecimal timeOffHour;
+
+    @ApiModelProperty(value = "填报请假工时")
+    private BigDecimal leaveHour;
+
     @ApiModelProperty("填报日期")
     private LocalDate fillDate;
 

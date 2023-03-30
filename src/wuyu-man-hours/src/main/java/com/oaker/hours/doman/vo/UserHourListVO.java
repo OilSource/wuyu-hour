@@ -32,8 +32,11 @@ public class UserHourListVO {
     @ApiModelProperty("填报状态：1 已填报， 2 未填报， 3不需填报, 4 节假日, 5 请假， 6 调休")
     private int status;
 
-    @ApiModelProperty("填报状态：1 已填报， 2 未填报， 3不需填报, 4 节假日, 5 请假， 6 调休")
+    @ApiModelProperty("已批工时")
     private BigDecimal totalHour;
+
+    @ApiModelProperty("已报工时")
+    private BigDecimal fillHour;
 
 
 }

@@ -92,6 +92,9 @@ public class MhUserHourServiceImpl extends ServiceImpl<MhUserHourMapper, MhUserH
     private MhUserHourMissServiceImpl userHourMissService;
 
     @Resource
+    private MhUserHourServiceImpl mhUserHourService;
+
+    @Resource
     private SysHolidayService sysHolidayService;
 
     /**
@@ -116,7 +119,7 @@ public class MhUserHourServiceImpl extends ServiceImpl<MhUserHourMapper, MhUserH
         }
         List<UserHourSaveDTO.ProjectHour> projectHours = userHourSaveDTO.getProjectHours();
         BigDecimal total = projectHours.stream()
-                .map(UserHourSaveDTO.ProjectHour::getHour)
+                .map(hour -> hour.getHour().add(hour.getWorkOvertimeHour()).add(hour.getChangeHour()).add(hour.getTimeOffHour()).add(hour.getLeaveHour()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         // 工时总数判断
         if (total.compareTo(new BigDecimal("24")) > 0) {
@@ -130,7 +133,8 @@ public class MhUserHourServiceImpl extends ServiceImpl<MhUserHourMapper, MhUserH
         MhUserHour userHour = new MhUserHour();
         userHour.setUserId(userId)
                 .setFillDate(fillDate)
-                .setTotalHour(total)
+                .setTotalHour(BigDecimal.ZERO)
+                .setFillHour(total)
                 .setCreateTime(createTime);
         // 1. 写入mh_user_hour 用户工时填报表
         baseMapper.insert(userHour);
@@ -154,13 +158,17 @@ public class MhUserHourServiceImpl extends ServiceImpl<MhUserHourMapper, MhUserH
                     .setEveryday(projectUser.getEveryday())
                     .setDaily(projectHour.getDaily())
                     .setCreateTime(createTime)
-                    .setApproveStatus(0);// 待审批
+                    .setApproveStatus(0)// 待审批
+                    .setWorkOvertimeHour(projectHour.getWorkOvertimeHour())
+                    .setChangeHour(projectHour.getChangeHour())
+                    .setTimeOffHour(projectHour.getTimeOffHour())
+                    .setLeaveHour(projectHour.getLeaveHour());
             hourDetailService.insert(mhHourDetail);
-            Long detailId =mhHourDetail.getId() ;
-            List<ProjectSubHour> workTypeHourList = projectHour.getWorkTypeHourList();
-            insertDetailSub(detailId,workTypeHourList);
+//            Long detailId =mhHourDetail.getId() ;
+//            List<ProjectSubHour> workTypeHourList = projectHour.getWorkTypeHourList();
+//            insertDetailSub(detailId,workTypeHourList);
             // 3. 更新mh_project_hour表中已用工时
-            projectHourService.addTotalHour(projectHour.getProjectId(), projectHour.getHour());
+//            projectHourService.addTotalHour(projectHour.getProjectId(), projectHour.getHour());
         }
 
         // 4. 如果mh_user_hour_miss用户缺报记录表 有缺报记录 则执行删除
@@ -232,6 +240,7 @@ public class MhUserHourServiceImpl extends ServiceImpl<MhUserHourMapper, MhUserH
             MhUserHour mhUserHour = hourMap.get(localDate);
             if(null!=mhUserHour){
                 userHourListVO.setTotalHour(mhUserHour.getTotalHour());
+                userHourListVO.setFillHour(mhUserHour.getFillHour());
             }
 
             //如果时间大于当前时间
@@ -423,7 +432,13 @@ public class MhUserHourServiceImpl extends ServiceImpl<MhUserHourMapper, MhUserH
         MhHourDetail detail = new MhHourDetail();
         detail.setApproveStatus(userHourApproveDTO.getStatus());
         hourDetailService.update(detail,wrapper);
-
+        MhHourDetail mhHourDetail = hourDetailService.selectById(userHourApproveDTO.getHourId());
+        EntityWrapper<MhUserHour> userHourWrapper = new EntityWrapper<>();
+        userHourWrapper.eq(Columns.MhUserHour.userId,mhHourDetail.getUserId())
+                .eq(Columns.MhUserHour.fillDate,mhHourDetail.getFillDate());
+        MhUserHour mhUserHour = new MhUserHour();
+        mhUserHour.setTotalHour(mhHourDetail.getUseHour().add(mhHourDetail.getChangeHour()).add(mhHourDetail.getWorkOvertimeHour()).add(mhHourDetail.getTimeOffHour()).add(mhHourDetail.getLeaveHour()));
+        mhUserHourService.updateForSet("total_hour=total_hour+"+mhUserHour.getTotalHour(),userHourWrapper);
         return Boolean.TRUE;
     }
 

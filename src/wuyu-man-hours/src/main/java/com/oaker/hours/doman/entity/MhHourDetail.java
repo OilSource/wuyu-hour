@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -39,9 +41,25 @@ public class MhHourDetail implements Serializable {
     @TableField(value = "project_id")
     private Long projectId;
 
-    /** 工时 */
+    /** 今日工时 */
     @TableField(value = "use_hour")
     private BigDecimal useHour;
+
+    /** 加班工时 */
+    @TableField(value = "work_overtime_hour")
+    private BigDecimal workOvertimeHour;
+
+    /** 加班工时 */
+    @TableField(value = "change_hour")
+    private BigDecimal changeHour;
+
+    /** 调休工时 */
+    @TableField(value = "time_off_hour")
+    private BigDecimal timeOffHour;
+
+    /** 请假工时 */
+    @TableField(value = "leave_hour")
+    private BigDecimal leaveHour;
 
     /** 填报日期 */
     @TableField(value = "fill_date")

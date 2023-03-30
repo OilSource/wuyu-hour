@@ -39,6 +39,10 @@ public class MhUserHour implements Serializable {
     @TableField(value = "total_hour")
     private BigDecimal totalHour;
 
+    /** 已填工时 */
+    @TableField(value = "fill_hour")
+    private BigDecimal fillHour;
+
     /** 创建时间 */
     @TableField(value = "create_time")
     private Date createTime;

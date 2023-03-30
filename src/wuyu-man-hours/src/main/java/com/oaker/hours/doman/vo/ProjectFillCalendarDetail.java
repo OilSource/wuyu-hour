@@ -1,5 +1,6 @@
 package com.oaker.hours.doman.vo;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -43,6 +44,18 @@ public class ProjectFillCalendarDetail {
 
         @ApiModelProperty("工时")
         private BigDecimal useHour;
+
+        @ApiModelProperty("加班工时")
+        private BigDecimal workOvertimeHour;
+
+        @ApiModelProperty("加班工时")
+        private BigDecimal changeHour;
+
+        @ApiModelProperty("调休工时")
+        private BigDecimal timeOffHour;
+
+        @ApiModelProperty("请假工时")
+        private BigDecimal leaveHour;
 
         @ApiModelProperty("岗位名称")
         private String postName;
